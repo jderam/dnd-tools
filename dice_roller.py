@@ -9,7 +9,7 @@ def roll_dice(qty: int, sides: int) -> int:
         result += random.randint(1,sides)
     return result
 
-def roll_stats(method: int) -> List(int):
+def roll_stats(method: int) -> List[int]:
     """ The methods are those outlined in the AD&D 2E PHB
         Method I  : 3d6 in order
         Method II : 3d6 twice for each ability, keep the better one
@@ -26,14 +26,30 @@ def roll_stats(method: int) -> List(int):
     assert method in range(1,7), "Unrecognized value for method"
     stats = []
     
-    if method == 1:
+    if method in [1,3]:
         for i in range(6):
             stats.append(roll_dice(3,6))
         return stats
     
+    if method == 2:
+        for i in range(6):
+            roll_a = roll_dice(3,6)
+            roll_b = roll_dice(3,6)
+            stats.append(max([roll_a, roll_b]))
+        return stats
+    
+    if method == 4:
+        my_rolls = [roll_dice(3,6) for i in range(12)]
+        my_rolls.sort()
+        stats.extend(my_rolls[-6:])
+        return stats
+
     if method == 5:
         for i in range(6):
             my_rolls = [roll_dice(1,6) for x in range(4)]
             my_rolls.sort()
+            my_roll = sum(my_rolls[-3:])
+            stats.append(my_roll)
+        return stats
     return
     
